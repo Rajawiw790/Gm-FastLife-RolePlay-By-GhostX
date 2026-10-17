@@ -29,6 +29,9 @@
 #include <tp>
 #include <Dini>
 #include <textdraw-streamer>
+forward OnPlayerSendPacket(playerid, packetid);
+forward OnVehicleExplode(vehicleid);
+forward DeleteGarageVehicle(vehicleid);
 
 
 #define CreatePlayerTextDraw CreateDynamicPlayerTextDraw
@@ -13706,7 +13709,7 @@ SetPlayerClothing(playerid)
 	pData[playerid][pAwaitingClothing] = 0;
 }
 
-SetPlayerInPaintball(playerid, type)
+SetPlayerInPaintball(playerid, type = 0)
 {
     if(pData[playerid][pPaintball] == 0)
 	{
@@ -78685,9 +78688,9 @@ CMD:stash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pMaterials] + value > GetPlayerCapacity(playerid, CAPACITY_MATERIALS))
+			    if(pData[playerid][pMaterials] + value > GetPlayerCapacity(CAPACITY_MATERIALS))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i materials. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pMaterials], GetPlayerCapacity(playerid, CAPACITY_MATERIALS));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i materials. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pMaterials], GetPlayerCapacity(CAPACITY_MATERIALS));
 				}
 
 			    pData[playerid][pMaterials] += value;
@@ -78715,9 +78718,9 @@ CMD:stash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pPot] + value > GetPlayerCapacity(playerid, CAPACITY_WEED))
+			    if(pData[playerid][pPot] + value > GetPlayerCapacity(CAPACITY_WEED))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i pot. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pPot], GetPlayerCapacity(playerid, CAPACITY_WEED));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i pot. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pPot], GetPlayerCapacity(CAPACITY_WEED));
 				}
 
 			    pData[playerid][pPot] += value;
@@ -78745,9 +78748,9 @@ CMD:stash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pCrack] + value > GetPlayerCapacity(playerid, CAPACITY_COCAINE))
+			    if(pData[playerid][pCrack] + value > GetPlayerCapacity(CAPACITY_COCAINE))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i Crack. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pCrack], GetPlayerCapacity(playerid, CAPACITY_COCAINE));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i Crack. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pCrack], GetPlayerCapacity(CAPACITY_COCAINE));
 				}
 
 			    pData[playerid][pCrack] += value;
@@ -78775,9 +78778,9 @@ CMD:stash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pMeth] + value > GetPlayerCapacity(playerid, CAPACITY_METH))
+			    if(pData[playerid][pMeth] + value > GetPlayerCapacity(CAPACITY_METH))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i meth. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pMeth], GetPlayerCapacity(playerid, CAPACITY_METH));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i meth. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pMeth], GetPlayerCapacity(CAPACITY_METH));
 				}
 
 			    pData[playerid][pMeth] += value;
@@ -78805,9 +78808,9 @@ CMD:stash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pPainkillers] + value > GetPlayerCapacity(playerid, CAPACITY_PAINKILLERS))
+			    if(pData[playerid][pPainkillers] + value > GetPlayerCapacity(CAPACITY_PAINKILLERS))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i painkillers. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pPainkillers], GetPlayerCapacity(playerid, CAPACITY_PAINKILLERS));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i painkillers. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pPainkillers], GetPlayerCapacity(CAPACITY_PAINKILLERS));
 				}
 
 			    pData[playerid][pPainkillers] += value;
@@ -78864,9 +78867,9 @@ CMD:stash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pHPAmmo] + value > GetPlayerCapacity(playerid, CAPACITY_HPAMMO))
+			    if(pData[playerid][pHPAmmo] + value > GetPlayerCapacity(CAPACITY_HPAMMO))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i HP ammo. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pHPAmmo], GetPlayerCapacity(playerid, CAPACITY_HPAMMO));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i HP ammo. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pHPAmmo], GetPlayerCapacity(CAPACITY_HPAMMO));
 				}
 
 			    SetWeaponAmmo(playerid, AMMO_HP, pData[playerid][pHPAmmo] + value);
@@ -78891,9 +78894,9 @@ CMD:stash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pPoisonAmmo] + value > GetPlayerCapacity(playerid, CAPACITY_POISONAMMO))
+			    if(pData[playerid][pPoisonAmmo] + value > GetPlayerCapacity(CAPACITY_POISONAMMO))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i poison ammo. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pPoisonAmmo], GetPlayerCapacity(playerid, CAPACITY_POISONAMMO));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i poison ammo. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pPoisonAmmo], GetPlayerCapacity(CAPACITY_POISONAMMO));
 				}
 
 			    SetWeaponAmmo(playerid, AMMO_POISON, pData[playerid][pPoisonAmmo] + value);
@@ -78918,9 +78921,9 @@ CMD:stash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pFMJAmmo] + value > GetPlayerCapacity(playerid, CAPACITY_FMJAMMO))
+			    if(pData[playerid][pFMJAmmo] + value > GetPlayerCapacity(CAPACITY_FMJAMMO))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i FMJ ammo. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pFMJAmmo], GetPlayerCapacity(playerid, CAPACITY_FMJAMMO));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i FMJ ammo. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pFMJAmmo], GetPlayerCapacity(CAPACITY_FMJAMMO));
 				}
 
 			    SetWeaponAmmo(playerid, AMMO_FMJ, pData[playerid][pFMJAmmo] + value);
@@ -89215,9 +89218,9 @@ CMD:vstash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pMaterials] + value > GetPlayerCapacity(playerid, CAPACITY_MATERIALS))
+			    if(pData[playerid][pMaterials] + value > GetPlayerCapacity(CAPACITY_MATERIALS))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i materials. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pMaterials], GetPlayerCapacity(playerid, CAPACITY_MATERIALS));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i materials. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pMaterials], GetPlayerCapacity(CAPACITY_MATERIALS));
 				}
 
 			    pData[playerid][pMaterials] += value;
@@ -89241,9 +89244,9 @@ CMD:vstash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pPot] + value > GetPlayerCapacity(playerid, CAPACITY_WEED))
+			    if(pData[playerid][pPot] + value > GetPlayerCapacity(CAPACITY_WEED))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i pot. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pPot], GetPlayerCapacity(playerid, CAPACITY_WEED));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i pot. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pPot], GetPlayerCapacity(CAPACITY_WEED));
 				}
 
 			    pData[playerid][pPot] += value;
@@ -89267,9 +89270,9 @@ CMD:vstash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pCrack] + value > GetPlayerCapacity(playerid, CAPACITY_COCAINE))
+			    if(pData[playerid][pCrack] + value > GetPlayerCapacity(CAPACITY_COCAINE))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i Crack. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pCrack], GetPlayerCapacity(playerid, CAPACITY_COCAINE));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i Crack. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pCrack], GetPlayerCapacity(CAPACITY_COCAINE));
 				}
 
 			    pData[playerid][pCrack] += value;
@@ -89293,9 +89296,9 @@ CMD:vstash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pMeth] + value > GetPlayerCapacity(playerid, CAPACITY_METH))
+			    if(pData[playerid][pMeth] + value > GetPlayerCapacity(CAPACITY_METH))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i meth. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pMeth], GetPlayerCapacity(playerid, CAPACITY_METH));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i meth. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pMeth], GetPlayerCapacity(CAPACITY_METH));
 				}
 
 			    pData[playerid][pMeth] += value;
@@ -89319,9 +89322,9 @@ CMD:vstash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pPainkillers] + value > GetPlayerCapacity(playerid, CAPACITY_PAINKILLERS))
+			    if(pData[playerid][pPainkillers] + value > GetPlayerCapacity(CAPACITY_PAINKILLERS))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i painkillers. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pPainkillers], GetPlayerCapacity(playerid, CAPACITY_PAINKILLERS));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i painkillers. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pPainkillers], GetPlayerCapacity(CAPACITY_PAINKILLERS));
 				}
 
 			    pData[playerid][pPainkillers] += value;
@@ -89370,9 +89373,9 @@ CMD:vstash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pHPAmmo] + value > GetPlayerCapacity(playerid, CAPACITY_HPAMMO))
+			    if(pData[playerid][pHPAmmo] + value > GetPlayerCapacity(CAPACITY_HPAMMO))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i HP ammo. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pHPAmmo], GetPlayerCapacity(playerid, CAPACITY_HPAMMO));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i HP ammo. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pHPAmmo], GetPlayerCapacity(CAPACITY_HPAMMO));
 				}
 
 			    SetWeaponAmmo(playerid, AMMO_HP, pData[playerid][pHPAmmo] + value);
@@ -89393,9 +89396,9 @@ CMD:vstash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pPoisonAmmo] + value > GetPlayerCapacity(playerid, CAPACITY_POISONAMMO))
+			    if(pData[playerid][pPoisonAmmo] + value > GetPlayerCapacity(CAPACITY_POISONAMMO))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i poison ammo. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pPoisonAmmo], GetPlayerCapacity(playerid, CAPACITY_POISONAMMO));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i poison ammo. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pPoisonAmmo], GetPlayerCapacity(CAPACITY_POISONAMMO));
 				}
 
 			    SetWeaponAmmo(playerid, AMMO_POISON, pData[playerid][pPoisonAmmo] + value);
@@ -89416,9 +89419,9 @@ CMD:vstash(playerid, params[])
 				{
 				    return SCM(playerid, COLOR_SYNTAX, "Insufficient amount.");
 			    }
-			    if(pData[playerid][pFMJAmmo] + value > GetPlayerCapacity(playerid, CAPACITY_FMJAMMO))
+			    if(pData[playerid][pFMJAmmo] + value > GetPlayerCapacity(CAPACITY_FMJAMMO))
 			    {
-			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i FMJ ammo. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pFMJAmmo], GetPlayerCapacity(playerid, CAPACITY_FMJAMMO));
+			        return SM(playerid, COLOR_SYNTAX, "You currently have %i/%i FMJ ammo. You can't carry anymore until you upgrade your inventory skill.", pData[playerid][pFMJAmmo], GetPlayerCapacity(CAPACITY_FMJAMMO));
 				}
 
 			    SetWeaponAmmo(playerid, AMMO_FMJ, pData[playerid][pFMJAmmo] + value);

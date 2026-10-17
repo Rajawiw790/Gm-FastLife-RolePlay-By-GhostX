@@ -60404,7 +60404,7 @@ public FinishRobStore(playerid)
         default: { weapon = 22; weapon_name = "9mm Pistol"; }
     }
 
-    GiveWeapon(playerid, weapon, 100);
+    GiveWeapon(playerid, weapon, true);
     TogglePlayerControllable(playerid, 1);
     ClearAnimations(playerid);
 

@@ -674,7 +674,7 @@ new Float:bDoorEditX[MAX_PLAYERS],
 
 
 new PlayerText:ProgressInteractionPTD[MAX_PLAYERS][4];
-new Timer:ProgresPlayerTimer[MAX_PLAYERS];
+new ProgresPlayerTimer[MAX_PLAYERS];
 new Float:PlayerProgressValue[MAX_PLAYERS];
 new Float:PlayerRequiredProgress[MAX_PLAYERS];
 new ProgressStatus[MAX_PLAYERS];

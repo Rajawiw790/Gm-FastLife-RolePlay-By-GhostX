@@ -26576,6 +26576,7 @@ case THREAD_LOOKUP_BANS:
         }
     }
 }
+    return 1;
 }
 
 

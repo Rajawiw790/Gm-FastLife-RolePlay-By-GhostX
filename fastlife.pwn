@@ -488,7 +488,7 @@ new DCC_Channel:veh;
 new DCC_Channel:saveveh;
 new DCC_Channel:editveh;
 new DCC_Channel:rmvveh;
-new Channel:crtdoor;
+new DCC_Channel:crtdoor;
 new DCC_Channel:editdoor;
 new DCC_Channel:rmvdoor;
 new DCC_Channel:crtgate;

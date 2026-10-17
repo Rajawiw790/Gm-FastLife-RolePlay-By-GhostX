@@ -98031,7 +98031,7 @@ stock id_ShowCitizen(playerid, name[], skin, age, sex)
 	// Job
 	new jobname[32];
 	 new jobid;
-    GetJobName(jobid, jobname, sizeof(jobname));
+    format(jobname, sizeof(jobname), "%s", GetJobName(jobid));
     PlayerTextDrawSetString(playerid, showid[playerid][19], jobname);
     PlayerTextDrawShow(playerid, showid[playerid][19]);
 

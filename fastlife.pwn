@@ -67180,7 +67180,7 @@ public OnOfflineBanHours(playerid, username[], hours, reason[], step)
 }*/
 
 new g_prof_name[64];
-new DCC_Channel:g_prof_channel_id;
+new g_prof_channel_id;
 DCMD:profile(user, channel, params[])
 {
     new playername[64];
@@ -67228,7 +67228,7 @@ stock bool:FL_FindOnlinePlayer(const username[], &ping)
 forward OnProfileCheck();
 public OnProfileCheck()
 {
-    new channel = g_prof_channel_id;
+    new channel = DCC_Channel:g_prof_channel_id;
 
     if(!cache_get_row_count(connectionID))
     {

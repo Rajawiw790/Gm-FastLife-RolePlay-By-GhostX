@@ -50251,7 +50251,7 @@ if(dialogid == DIALOG_ATM_PIN)
                 new price = 1000000;
                 if(pData[playerid][pCash] < price)
                 {
-                    return SCM(playerid, COLOR_SYNTAX, "M3ANDKX FLOS BAX TCHRI PASSPORT ($%d).", price);
+                    return SM(playerid, COLOR_SYNTAX, "M3ANDKX FLOS BAX TCHRI PASSPORT ($%d).", price);
                 }
                 if(pData[playerid][pPassport] >= 1)
                 {
@@ -60671,7 +60671,7 @@ CMD:buykey(playerid, params[])
     new price = 5000;
 
     if(pData[playerid][pDirtyCash] < price)
-        return SCM(playerid, COLOR_RED, "You need %d$ to buy a KEY!", price);
+        return SM(playerid, COLOR_RED, "You need %d$ to buy a KEY!", price);
 
     pData[playerid][pKey] += 1;
     GivePlayerCash(playerid, -price);
@@ -60679,7 +60679,7 @@ CMD:buykey(playerid, params[])
     mysql_format(connectionID, queryBuffer, sizeof(queryBuffer), "UPDATE users SET `key` = %d WHERE uid = %d", pData[playerid][pKey], pData[playerid][pID]);
     mysql_tquery(connectionID, queryBuffer);
 
-    SCM(playerid, COLOR_GREEN, "You bought a KEY for $%d!", price);
+    SM(playerid, COLOR_GREEN, "You bought a KEY for $%d!", price);
     return 1;
 }
 
@@ -60704,7 +60704,7 @@ CMD:sellwatch(playerid, params[])
         pData[playerid][pWatch], pData[playerid][pCash], pData[playerid][pID]);
     mysql_tquery(connectionID, queryBuffer);
 
-    SCM(playerid, COLOR_GREEN, "You sold a Watch for $%d!", price);
+    SM(playerid, COLOR_GREEN, "You sold a Watch for $%d!", price);
     ApplyAnimation(playerid, "DEALER", "shop_pay", 4.0, 0, 0, 0, 0, 0, 1);
 
     return 1;
@@ -61987,7 +61987,7 @@ CMD:myupgrades(playerid, params[])
 CMD:upgrade(playerid, params[])
 {
     new cost = 15000;
-	if(!IsPlayerInRangeOfPoint(playerid, 3.0, 1482.486328, 1830.793090, 10.828022, 22))
+	if(!IsPlayerInRangeOfPoint(playerid, 3.0, 1482.486328, 1830.793090, 10.828022) || GetPlayerInterior(playerid) != 22)
 	{
 	    return SCM(playerid, COLOR_SYNTAX, "You are not in range of the desk at city hall.");
 	}
@@ -67081,7 +67081,7 @@ CMD:unbanhours(playerid, params[])
     mysql_tquery(connectionID, queryBuffer);
 
     Log_Write("log_punishments", "%s lifted temp-ban for player %s", GetPlayerNameEx(playerid), playername);
-    SCM(playerid, COLOR_YELLOW, "You have successfully unbanned %s (Temp-ban only).", playername);
+    SM(playerid, COLOR_YELLOW, "You have successfully unbanned %s (Temp-ban only).", playername);
     return 1;
 }
 
@@ -73659,7 +73659,7 @@ CMD:gotobutton(playerid, params[])
     if(!Iter_Contains(Buttons, id))
         return ShowError(playerid, "Invalid Button ID!");
 
-    SetPlayerPos(playerid, ButtonData[id][bPosX], ButtonData[id][bPosY], ButtonData[id][bPosZ], 0.0);
+    SetPlayerPos(playerid, ButtonData[id][bPosX], ButtonData[id][bPosY], ButtonData[id][bPosZ]);
     SetPlayerInterior(playerid, ButtonData[id][bInterior]);
     SetPlayerVirtualWorld(playerid, ButtonData[id][bWorld]);
     pData[playerid][pInDoor] = -1;
@@ -86310,7 +86310,7 @@ public OnCheatDetected(playerid, ip_address[], type, code)
                     Float:z;
 
                 AntiCheatGetPos(playerid, x, y, z);
-                return ac_SetPlayerPos(playerid, x, y, z);
+                return acc_SetPlayerPos(playerid, x, y, z);
             }
             default:
             {

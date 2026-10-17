@@ -32,6 +32,7 @@
 forward OnPlayerSendPacket(playerid, packetid);
 forward OnVehicleExplode(vehicleid);
 forward DeleteGarageVehicle(vehicleid);
+forward DropPlayerItem(playerid, itemid, itemname[], value);
 
 
 #define CreatePlayerTextDraw CreateDynamicPlayerTextDraw
@@ -86291,9 +86292,10 @@ CMD:toysking(playerid, params[])
         return 1;
     }
 
-forward OnCheatDetected(playerid, ip_address[], type, code);
-public OnCheatDetected(playerid, ip_address[], type, code)
+forward OnCheatDetected(playerid, ip_address[], type, code, code2);
+public OnCheatDetected(playerid, ip_address[], type, code, code2)
 {
+    #pragma unused code2
     new player_name[MAX_PLAYER_NAME];
     GetPlayerName(playerid, player_name, sizeof(player_name));
 

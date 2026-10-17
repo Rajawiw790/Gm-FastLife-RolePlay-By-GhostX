@@ -503,7 +503,7 @@ new DCC_Channel:jail_channel = DCC_INVALID_CHANNEL;
 #define MAX_TOP_PLAYERS 3
 
 new TopActors[MAX_TOP_PLAYERS];
-new TopActorText[MAX_TOP_PLAYERS];
+new Text3D:TopActorText[MAX_TOP_PLAYERS];
 new TopPlayerName[MAX_TOP_PLAYERS][MAX_PLAYER_NAME];
 new TopPlayerHours[MAX_TOP_PLAYERS];
 new ChangeSkinChef[MAX_PLAYERS];

@@ -6475,7 +6475,7 @@ new const clothifstypes[][] =
 enum clothingEnum
 {
     clothifstype[20],
-    clothingType[20],
+    clothingType[24],
     clothingName[32],
     clothingModel,
     clothingBone
@@ -44057,43 +44057,43 @@ if(newkeys & KEY_YES)
         if(IsLawEnforcement(playerid) && GetFactionType(playerid) != FACTION_MEDIC && GetFactionType(playerid) != FACTION_GOVERNMENT)
         {
             new panels,doors,lights,tires;
-            new vehicleid = GetPlayerVehicleID(playerid), Float:x, Float:y, Float:z, Float:tmp;
+            new lawVehicleid = GetPlayerVehicleID(playerid), Float:x, Float:y, Float:z, Float:tmp;
 
-            if(!VehicleHasWindows(vehicleid))
+            if(!VehicleHasWindows(lawVehicleid))
             {
                 return SCM(playerid, COLOR_SYNTAX, "This vehicle cannot have a siren attached to it.");
             }
 
-            if(!IsValidDynamicObject(vehicleSiren[vehicleid]))
+            if(!IsValidDynamicObject(vehicleSiren[lawVehicleid]))
             {
-                GetVehicleModelInfo(GetVehicleModel(vehicleid), VEHICLE_MODEL_INFO_SIZE, z, z, z);
-                GetVehicleModelInfo(GetVehicleModel(vehicleid), VEHICLE_MODEL_INFO_FRONTSEAT, x, y, tmp);
+                GetVehicleModelInfo(GetVehicleModel(lawVehicleid), VEHICLE_MODEL_INFO_SIZE, z, z, z);
+                GetVehicleModelInfo(GetVehicleModel(lawVehicleid), VEHICLE_MODEL_INFO_FRONTSEAT, x, y, tmp);
 
-                vehicleSiren[vehicleid] = CreateDynamicObject(18646, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-                AttachDynamicObjectToVehicle(vehicleSiren[vehicleid], vehicleid, -x, y, z / 1.9, 0.0, 0.0, 0.0);
+                vehicleSiren[lawVehicleid] = CreateDynamicObject(18646, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+                AttachDynamicObjectToVehicle(vehicleSiren[lawVehicleid], lawVehicleid, -x, y, z / 1.9, 0.0, 0.0, 0.0);
 
-                SendProximityMessage(playerid, 20.0, SERVER_COLOR1, "**{C2A2DA} %s places a detachable siren on the roof of the %s.", GetRPName(playerid), GetVehicleName(vehicleid));
+                SendProximityMessage(playerid, 20.0, SERVER_COLOR1, "**{C2A2DA} %s places a detachable siren on the roof of the %s.", GetRPName(playerid), GetVehicleName(lawVehicleid));
             }
             else
             {
-                DestroyDynamicObject(vehicleSiren[vehicleid]);
-                vehicleSiren[vehicleid] = INVALID_OBJECT_ID;
-                SendProximityMessage(playerid, 20.0, SERVER_COLOR1, "**{C2A2DA} %s detaches the siren from the roof of the %s.", GetRPName(playerid), GetVehicleName(vehicleid));
+                DestroyDynamicObject(vehicleSiren[lawVehicleid]);
+                vehicleSiren[lawVehicleid] = INVALID_OBJECT_ID;
+                SendProximityMessage(playerid, 20.0, SERVER_COLOR1, "**{C2A2DA} %s detaches the siren from the roof of the %s.", GetRPName(playerid), GetVehicleName(lawVehicleid));
             }
-            if(!Flasher[vehicleid])
+            if(!Flasher[lawVehicleid])
             {
-                GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
-                SetVehicleParams(vehicleid, VEHICLE_LIGHTS, true);
-                SendProximityMessage(playerid, 20.0, SERVER_COLOR1, "**{C2A2DA} %s turns on the emergency lights of the %s.", GetRPName(playerid), GetVehicleName(vehicleid));
-                Flasher[vehicleid] = 1;
+                GetVehicleDamageStatus(lawVehicleid,panels,doors,lights,tires);
+                SetVehicleParams(lawVehicleid, VEHICLE_LIGHTS, true);
+                SendProximityMessage(playerid, 20.0, SERVER_COLOR1, "**{C2A2DA} %s turns on the emergency lights of the %s.", GetRPName(playerid), GetVehicleName(lawVehicleid));
+                Flasher[lawVehicleid] = 1;
             }
             else
             {
-                GetVehicleDamageStatus(vehicleid,panels,doors,lights,tires);
-                UpdateVehicleDamageStatus(vehicleid, panels, doors, 5, tires);
-                Flasher[vehicleid] = 0;
-                SetVehicleParams(vehicleid, VEHICLE_LIGHTS, false);
-                SendProximityMessage(playerid, 20.0, SERVER_COLOR1, "**{C2A2DA} %s turns off the emergency lights of the %s.", GetRPName(playerid), GetVehicleName(vehicleid));
+                GetVehicleDamageStatus(lawVehicleid,panels,doors,lights,tires);
+                UpdateVehicleDamageStatus(lawVehicleid, panels, doors, 5, tires);
+                Flasher[lawVehicleid] = 0;
+                SetVehicleParams(lawVehicleid, VEHICLE_LIGHTS, false);
+                SendProximityMessage(playerid, 20.0, SERVER_COLOR1, "**{C2A2DA} %s turns off the emergency lights of the %s.", GetRPName(playerid), GetVehicleName(lawVehicleid));
             }
         }
         //pData[playerid][pLastPress] = gettime(); // Prevents spamming. Sometimes keys get messed up and register twice.
@@ -70456,10 +70456,10 @@ CMD:calls(playerid, params[])
     }
     if(callsign[playerid] == 0)
     {
-        new vehicleid = GetPlayerVehicleID(playerid);
-        if (vehicleid != 0)
+        new labelVehicleid = GetPlayerVehicleID(playerid);
+        if (labelVehicleid != 0)
         {
-            UpdateVehicleLabel(vehicleid);
+            UpdateVehicleLabel(labelVehicleid);
         }
         callsign[playerid] = 1;
 
@@ -70467,13 +70467,13 @@ CMD:calls(playerid, params[])
     }
     else
     {
-        new vehicleid = GetPlayerVehicleID(playerid);
-        if (vehicleid != 0)
+        new labelVehicleid = GetPlayerVehicleID(playerid);
+        if (labelVehicleid != 0)
         {
-            if (g_VehicleLabels[vehicleid] != Text3D:INVALID_3DTEXT_ID)
+            if (g_VehicleLabels[labelVehicleid] != Text3D:INVALID_3DTEXT_ID)
             {
-                DestroyDynamic3DTextLabel(g_VehicleLabels[vehicleid]);
-                g_VehicleLabels[vehicleid] = Text3D:INVALID_3DTEXT_ID;
+                DestroyDynamic3DTextLabel(g_VehicleLabels[labelVehicleid]);
+                g_VehicleLabels[labelVehicleid] = Text3D:INVALID_3DTEXT_ID;
             }
         }
         SendProximityMessage(playerid, 10.0, SERVER_COLOR1, "**{C2A2DA} %s puts off his callsign.", GetRPName(playerid));

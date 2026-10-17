@@ -20897,35 +20897,35 @@ public SecondTimer(playerid)
             if(pData[i][pBandage])
             {
                 new
-                Float:health;
+                Float:hpVal;
 
-                GetPlayerHealth(i, health);
+                GetPlayerHealth(i, hpVal);
 
-                if((health + 5.0) > 100.0)
+                if((hpVal + 5.0) > 100.0)
                 {
                     SetPlayerHealth(i, 100.0);
                     pData[i][pBandage] = 0;
                 }
                 else
                 {
-                    SetPlayerHealth(i, health + 1.0);
+                    SetPlayerHealth(i, hpVal + 1.0);
                 }
             }
             if(pData[i][pFirstAid])
             {
-                new Float:health, Float:armour;
+                new Float:hpVal, Float:armVal;
 
-                GetPlayerHealth(i, health);
-                GetPlayerArmour(i, armour);
+                GetPlayerHealth(i, hpVal);
+                GetPlayerArmour(i, armVal);
 
-                if((health + 1.0) > 100.0)
+                if((hpVal + 1.0) > 100.0)
                 {
                     SetPlayerHealth(i, 100.0);
                     pData[i][pFirstAid] = 0;
                 }
                 else
                 {
-                    SetPlayerHealth(i, health + 1.0);
+                    SetPlayerHealth(i, hpVal + 1.0);
                 }
             }
             if(pData[i][pTazedTime] > 0)
@@ -21733,9 +21733,9 @@ public SecondTimer(playerid)
             if(pData[i][pPoisonTime] > 0)
             {
                 new
-                Float:health;
-                GetPlayerHealth(i, health);
-                SetPlayerHealth(i, health - 3.0 < 1.0 ? 1.0 : health - 3.0);
+                Float:hpVal;
+                GetPlayerHealth(i, hpVal);
+                SetPlayerHealth(i, hpVal - 3.0 < 1.0 ? 1.0 : hpVal - 3.0);
                 pData[i][pPoisonTime]--;
             }
 

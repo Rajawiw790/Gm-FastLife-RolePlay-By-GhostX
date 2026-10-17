@@ -15878,7 +15878,7 @@ public CheckPlayerProgress(playerid, type)
 
         for(new i = 0; i < 4; i++)
         {
-             (playerid, ProgressInteractionPTD[playerid][i]);
+             PlayerTextDrawHide(playerid, ProgressInteractionPTD[playerid][i]);
         }
 
         ShowSucces(playerid, "Your succeeded");
@@ -15936,7 +15936,7 @@ public UpdateVehicleLabels()
     }
     return 1;
 }
-/*stock CreateVehicleLabel(vehicleid)
+stock CreateVehicleLabel(vehicleid)
 {
     if (!IsValidVehicle(vehicleid)) return 0;
 

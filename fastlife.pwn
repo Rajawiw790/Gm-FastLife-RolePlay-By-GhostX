@@ -3547,7 +3547,7 @@ enum eEnum
     eAdminLevel,
     eFactionType,
     eGangid,
-    DynamicPickup:eExitPickup,
+    eExitPickup,
     Text3D:eExitText,
     eVIP,
     eVehicles,

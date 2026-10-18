@@ -26866,10 +26866,10 @@ public OnClickDynamicPlayerTextDraw(playerid, PlayerText:textid)
         }
         else SCM(playerid, COLOR_SYNTAX, "You are not close to anything which you can lock.");
     }
-    if(textid == selectfreqtd) {
+    if(_:textid == _:selectfreqtd) {
 		ShowPlayerDialog(playerid, DIALOG_SETFREQ, DIALOG_STYLE_INPUT, "{6688FF}Set Frequence", "Please Choose The frequence To connect:", "Choose", "Cancel");
 	}
-	if(textid == connectfreq) {
+	if(_:textid == _:connectfreq) {
 		 if(ToggleRadio[playerid] == 0)
         {
             SvAttachListenerToStream(Frequency[FrequencyConnect[playerid]], playerid);
@@ -26881,7 +26881,7 @@ public OnClickDynamicPlayerTextDraw(playerid, PlayerText:textid)
             ToggleRadio[playerid] = 1;
         }
 	}
-	if(textid == disconnectfreq) {
+	if(_:textid == _:disconnectfreq) {
 		 if(ToggleRadio[playerid] == 1)
         {
             SvDetachListenerFromStream(Frequency[FrequencyConnect[playerid]], playerid);
@@ -26893,7 +26893,7 @@ public OnClickDynamicPlayerTextDraw(playerid, PlayerText:textid)
             ToggleRadio[playerid] = 0;
         }
 	}
-	if(textid == closeradio) {
+	if(_:textid == _:closeradio) {
  		for(new i = 0; i < 19; i++) {
 			TextDrawHideForPlayer(playerid, FreqTD[i]);
 		}
@@ -26905,7 +26905,7 @@ public OnClickDynamicPlayerTextDraw(playerid, PlayerText:textid)
 		TextDrawHideForPlayer(playerid, disconnectfreq);
 		CancelSelectTextDraw(playerid);
 	}
- 	if(textid == Text:INVALID_TEXT_DRAW && !pData[playerid][pLogged])
+ 	if(textid == PlayerText:INVALID_TEXT_DRAW && !pData[playerid][pLogged])
 	{
 		SelectTextDraw(playerid, COLOR_LIGHTBLUE);
 	}
@@ -103397,12 +103397,6 @@ public CheckLobbyTime(playerid)
     }
 
     return 1;
-}
-
-forward GetEngineStatus(vehicleid);
-public GetEngineStatus(vehicleid)
-{
-    return VehicleInfo[vehicleid][VEHICLE_ENGINE];
 }
 
 forward SwitchVehicleEngine(vehicleid, bool:status);

@@ -26685,7 +26685,7 @@ public OnClickDynamicPlayerTextDraw(playerid, PlayerText:textid)
 	if(_:textid == _:connectfreq) {
 		 if(ToggleRadio[playerid] == 0)
         {
-            SvAttachListenerToStream(Frequency[FrequencyConnect[playerid]], playerid);
+            if (Frequency[FrequencyConnect[playerid]] != SV_NULL) SvAttachListenerToStream(Frequency[FrequencyConnect[playerid]], playerid);
             new string[168];
 			PlayerTextDrawSetString(playerid, pFreqTD[playerid][1], "Connected...");
 			PlayerTextDrawShow(playerid, pFreqTD[playerid][1]);
@@ -26697,7 +26697,7 @@ public OnClickDynamicPlayerTextDraw(playerid, PlayerText:textid)
 	if(_:textid == _:disconnectfreq) {
 		 if(ToggleRadio[playerid] == 1)
         {
-            SvDetachListenerFromStream(Frequency[FrequencyConnect[playerid]], playerid);
+            if (Frequency[FrequencyConnect[playerid]] != SV_NULL) SvDetachListenerFromStream(Frequency[FrequencyConnect[playerid]], playerid);
             new string[168];
 			PlayerTextDrawSetString(playerid, pFreqTD[playerid][1], "Disconnected...");
 			PlayerTextDrawShow(playerid, pFreqTD[playerid][1]);
@@ -27554,10 +27554,10 @@ public OnGameModeInit()
     {
         SetPlayerHealth(i, 100);
     }
-    /*for(new i; i < MAX_FREQUENCY; i++)
+    for(new i; i < MAX_FREQUENCY; i++)
     {
         Frequency[i] = SvCreateGStream(0xffff0000, "Radio");
-    }*/
+    }
 	for(new i = 0; i < MAX_FREQUENCIAS; i++)
 	Frequencia[i] = SvCreateGStream(0xFF5800FF, "RadioRv");
     LoadServerSettings();
@@ -42564,6 +42564,7 @@ public OnPlayerUpdate(playerid)
     {
         KickPlayer(playerid);
     }
+#if 0 // custom self speed check disabled: nex-ac speedhack handles this
     if(!IsPlayerInAnyVehicle(playerid))
     {
         if(GetPlayerWeapon(playerid) == WEAPON_PARACHUTE || GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK)
@@ -42626,6 +42627,7 @@ public OnPlayerUpdate(playerid)
             }
         }
     }
+    #endif
     if(pData[playerid][pCurrentWeapon] != GetPlayerWeapon(playerid))
     {
         pData[playerid][pCurrentWeapon] = GetPlayerWeapon(playerid);
@@ -52026,7 +52028,7 @@ if(dialogid == DIALOG_ATM_PIN)
 			format(string, 128, "{FFFF00}[RADIO]: {ffffff}set your freq to (%d Khz)", FrequencyConnect[playerid]);
 			SendClientMessage(playerid, 0x00AE00FF, string);
    			ToggleRadio[playerid] = 1;
-			SvAttachListenerToStream(Frequency[FrequencyConnect[playerid]], playerid);
+			if (Frequency[FrequencyConnect[playerid]] != SV_NULL) SvAttachListenerToStream(Frequency[FrequencyConnect[playerid]], playerid);
 			return 1;
 			}
 		}

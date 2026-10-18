@@ -594,6 +594,7 @@ enum inventoryData
 	invTotalQuantity
 };
 new InventoryData[MAX_PLAYERS][MAX_INVENTORY][inventoryData];
+new gInvSwapFirst[MAX_PLAYERS];
 enum e_InventoryItems
 {
 	e_InventoryItem[32], //Nama item
@@ -103572,6 +103573,29 @@ public OnShowTopPlayers(playerid)
 }
 
 //INV BY GHOST
+stock InventorySwapSlots(playerid, a, b)
+{
+	new tmpExists = InventoryData[playerid][a][invExists];
+	new tmpModel = InventoryData[playerid][a][invModel];
+	new tmpAmount = InventoryData[playerid][a][invAmount];
+	new tmpTotal = InventoryData[playerid][a][invTotalQuantity];
+	new tmpName[32 char];
+	for(new j = 0; j < 32; j++) tmpName[j] = InventoryData[playerid][a][invItem][j];
+
+	InventoryData[playerid][a][invExists] = InventoryData[playerid][b][invExists];
+	InventoryData[playerid][a][invModel] = InventoryData[playerid][b][invModel];
+	InventoryData[playerid][a][invAmount] = InventoryData[playerid][b][invAmount];
+	InventoryData[playerid][a][invTotalQuantity] = InventoryData[playerid][b][invTotalQuantity];
+	for(new j = 0; j < 32; j++) InventoryData[playerid][a][invItem][j] = InventoryData[playerid][b][invItem][j];
+
+	InventoryData[playerid][b][invExists] = tmpExists;
+	InventoryData[playerid][b][invModel] = tmpModel;
+	InventoryData[playerid][b][invAmount] = tmpAmount;
+	InventoryData[playerid][b][invTotalQuantity] = tmpTotal;
+	for(new j = 0; j < 32; j++) InventoryData[playerid][b][invItem][j] = tmpName[j];
+	return 1;
+}
+
 stock Inventory_Clear(playerid)
 {
 	static
@@ -103730,6 +103754,11 @@ stock Inventory_Add(playerid, item[], model, quantity = 1)
 	new
 		itemid = Inventory_GetItemID(playerid, item);
 
+	if (itemid != -1)
+	{
+	    InventoryData[playerid][itemid][invAmount] += quantity;
+	    return itemid;
+	}
 	if (itemid == -1)
 	{
 	    itemid = Inventory_GetFreeID(playerid);
@@ -103741,7 +103770,7 @@ stock Inventory_Add(playerid, item[], model, quantity = 1)
 			    new totalquantity = g_aInventoryItems[i][e_InventoryTotal];
      	 	  	InventoryData[playerid][itemid][invExists] = true;
 		        InventoryData[playerid][itemid][invModel] = model;
-				InventoryData[playerid][itemid][invAmount] = model;
+				InventoryData[playerid][itemid][invAmount] = quantity;
 				InventoryData[playerid][itemid][invTotalQuantity] = totalquantity;
 		        return itemid;
 			}
@@ -103759,6 +103788,7 @@ stock Inventory_Close(playerid)
 	CancelSelectTextDraw(playerid);
 	pData[playerid][pSelectItem] = -1;
 	pData[playerid][pGiveAmount] = 0;
+	gInvSwapFirst[playerid] = 0;
 	BukaInven[playerid] = 0;
 	for(new a = 0; a < 18; a++)
 	{
@@ -103950,6 +103980,29 @@ stock Inventory_Update(playerid)
 	new str[256], string[256];
 	for(new i = 0; i < MAX_INVENTORY; i++)
 	{
+		if(textid == INDEXTD[playerid][i])
+		{
+			if(gInvSwapFirst[playerid] == 0)
+			{
+				if(InventoryData[playerid][i][invExists])
+				{
+					MenuStore_UnselectRow(playerid);
+					MenuStore_SelectRow(playerid, i);
+					gInvSwapFirst[playerid] = i + 1;
+				}
+			}
+			else
+			{
+				new first = gInvSwapFirst[playerid] - 1;
+				gInvSwapFirst[playerid] = 0;
+				MenuStore_UnselectRow(playerid);
+				if(first != i) InventorySwapSlots(playerid, first, i);
+				Inventory_Show(playerid);
+			}
+		}
+	}
+	for(new i = 0; i < MAX_INVENTORY; i++)
+	{
 		if(InventoryData[playerid][i][invExists])
 		{
 			//sesuakian dengan object item kalian
@@ -103995,7 +104048,7 @@ public OnPlayerGiveInvItem(playerid, userid, itemid, name[], value)
     new string[64];
     new str[64];
 
-	if(Inventory_Count(playerid, string) < pData[playerid][pGiveAmount])
+	if(value < 1 || Inventory_Count(playerid, name) < value)
 		return SCM(playerid, COLOR_SYNTAX, "Error: ma3andekch ged hadchi li baghi t givih !");
 
 	if(!strcmp(name, "Money", true))
@@ -104165,6 +104218,31 @@ public OnPlayerGiveInvItem(playerid, userid, itemid, name[], value)
 
         pData[playerid][pWalkieTalkie] -= value;
 		pData[userid][pWalkieTalkie] += value;
+	}
+	// Inventory transfer (generic, for every item)
+	{
+		new giverSlot = Inventory_GetItemID(playerid, name);
+		if(giverSlot == -1) return Inventory_Close(playerid);
+		new model = InventoryData[playerid][giverSlot][invModel];
+		new unit = 1;
+		for(new i = 0; i < sizeof(g_aInventoryItems); i++) if(!strcmp(g_aInventoryItems[i][e_InventoryItem], name, true))
+		{
+			unit = g_aInventoryItems[i][e_InventoryTotal];
+			break;
+		}
+		if(Inventory_GetItemID(userid, name) == -1 && Inventory_GetFreeID(userid) == -1)
+			return SCM(playerid, COLOR_SYNTAX, "[Inventory] Had lplayer ma3andouch blasa khawiya!");
+
+		InventoryData[playerid][giverSlot][invAmount] -= value;
+		if(unit != -1) InventoryData[playerid][giverSlot][invTotalQuantity] -= unit * value;
+		if(InventoryData[playerid][giverSlot][invAmount] <= 0)
+		{
+			InventoryData[playerid][giverSlot][invExists] = false;
+			InventoryData[playerid][giverSlot][invModel] = 0;
+			InventoryData[playerid][giverSlot][invAmount] = 0;
+			InventoryData[playerid][giverSlot][invTotalQuantity] = 0;
+		}
+		Inventory_Addset(userid, name, model, value, (unit == -1) ? -1 : unit * value);
 	}
 	return Inventory_Close(playerid);
 }

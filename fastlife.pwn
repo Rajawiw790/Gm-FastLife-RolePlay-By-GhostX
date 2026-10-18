@@ -431,7 +431,6 @@ new carID[4];
 new carBarrels[MAX_VEHICLES][MAX_BARRELS];
 new carBarrelCount[MAX_VEHICLES];
 //system anim glitch
-new bool:IsInAnim[MAX_PLAYERS];
 
 new LogsObjects[MAX_VEHICLES][LOG_LIMIT];
 #define OILEXPO_LIMIT (5)
@@ -507,8 +506,6 @@ new TopPlayerName[MAX_TOP_PLAYERS][MAX_PLAYER_NAME];
 new TopPlayerHours[MAX_TOP_PLAYERS];
 new ChangeSkinChef[MAX_PLAYERS];
 
-new TopMoneyName[3][MAX_PLAYER_NAME];
-new TopMoneyAmount[3];
 
 new PacketFloodCount[MAX_PLAYERS];
 //system rob
@@ -526,11 +523,6 @@ enum e_InvItem
     itemName[32]
 }
 
-new SelectedInvType[MAX_PLAYERS];
-new SelectedInvValue[MAX_PLAYERS];
-new SelectedInvName[MAX_PLAYERS][32];
-new SelectedGivePlayer[MAX_PLAYERS];
-new PlayerInvItems[MAX_PLAYERS][100][e_InvItem];
 
 enum gData
 {
@@ -577,7 +569,6 @@ enum
     PROGRESS_ELECTRTIQUE
 };
 
-new INVALID_ITERATOR_SLOT;
 
 new Text:RobFleecaZB[25];
 new Text:RobFleecaZB2[11];
@@ -748,38 +739,12 @@ enum
 
 
 new JobState[MAX_PLAYERS];
-new JobHouse[MAX_PLAYERS];
-new JobActor[MAX_PLAYERS];
-new RepairType[MAX_PLAYERS];
-new Text3D:TextActor[MAX_PLAYERS];
-new Text3D:TextTV[MAX_PLAYERS];
-new Text3D:TextMachine[MAX_PLAYERS];
-
-new const Float:HousePos[3][3] = {
-    {1497.197387, -666.629699, 95.601257},
-    {2148.546386, -1319.414306, 25.743345},
-    {880.218444, -1423.984008, 14.481447}
-};
 
 
 
-new const Float:HouseActor[3][3] = {
-    {2326.738769, -1021.691894, 1050.210937},
-    {225.080307, 1188.006958, 1080.257812},
-    {220.261077, 1158.958007, 1082.609375}
-};
 
-new const Float:HouseTV[3][3] = {
-    {2323.431152, -1018.825744, 1050.210937},
-    {220.378555, 1193.578857, 1080.257812},
-    {218.518981, 1152.988403, 1082.609375}
-};
 
-new const Float:HouseMachine[3][3] = {
-    {2312.928222, -1011.591003, 1050.210937},
-    {244.850555, 1194.534423, 1080.257812},
-    {228.335556, 1156.849853, 1082.609375}
-};
+
 
 /*new const Float:TopActorPos[MAX_TOP_PLAYERS][4] =
 {
@@ -847,7 +812,6 @@ new Float:g_ActorPositions[][4] = {
 new currentPos = 0;
 new bool:g_HasActorCheckpoint[MAX_PLAYERS];
 new Text3D:gVendorLabel;
-new g_LastCallVendor[MAX_PLAYERS];
 #define VENDOR_COOLDOWN_MS (5 * 60 * 60 * 1000)
 //SYSTEM ROB FLEECA
 #define MAX_DIGITS 4
@@ -1094,7 +1058,6 @@ new const ForbiddenWords[][] =
     "zkk", "zk", "trma", "zeb", "zb", "tabon"
 };
 
-new ForbiddenWarnings[MAX_PLAYERS];
 
 
 new Text:PROGRESSBAR[3];
@@ -1118,7 +1081,6 @@ new Text: TIMETD[4];
 //infopl
 new PlayerText:Zonetd[MAX_PLAYERS][1];
 new AtmPinAttempt[MAX_PLAYERS];
-new AtmTempPlayer[MAX_PLAYERS];
 new AtmDialogOpen[MAX_PLAYERS];
 
 
@@ -1134,7 +1096,6 @@ new Text:PICKUP;
 new Text:HANGUP;
 
 // Gopay
-new gLastTwt;
 //HANDPHONE
 new Text:HANDPHONE[47];
 new Text:CALLH;
@@ -1173,7 +1134,6 @@ enum LP
 }
 new LastPos[MAX_PLAYERS][LP];
 new KeyTimer[MAX_PLAYERS];
-new VehicleObject[MAX_VEHICLES] = {-1, ...};
 
 /*
 #if defined Christmas
@@ -1534,7 +1494,6 @@ new LumberJacking[MAX_PLAYERS] = -1;
 new pBlind[MAX_PLAYERS] = 1; //
 new Text:Blind;
 
-new bool:PlayerInSFZone[MAX_PLAYERS];
 
 forward OnAntiCheatTurnUpsideDown(playerid, Float:angle);
 
@@ -3804,18 +3763,6 @@ new g_wl_name[64];
 new g_wl_discord[32];
 
 // ===== Ban Globals =====
-new g_ban_admin[64];
-new g_ban_target[64];
-new g_ban_reason[128];
-new g_ban_hours;
-new g_ban_online;
-new g_ban_day;
-new g_ban_month;
-new g_ban_year;
-new g_ban_hour;
-new g_ban_min;
-new g_ban_sec;
-new g_ban_discord[32];
 
 /*#if defined Christmas
 #else
@@ -3829,7 +3776,6 @@ new Text:TimeTD;
 // Report Textdraw
 new Text:ReportTD;
 new Text:DieText;
-new Text:HackerTD[36];
 new Text:InjuredText;
 
 enum noclipenum
@@ -3857,7 +3803,6 @@ new Text:Bolinha[4];
 //new PlayerBar:PlayerProgressBar[MAX_PLAYERS][3];
 
 //actors
-new WorkerActor;
 
 // Capture Limit
 new MaxCapCount[2] = {  2 , 1 };
@@ -4072,7 +4017,6 @@ new Float:g_FarmDelivery[][] =
     {1544.4407, -1675.5522, 13.5584}
 };
 
-new g_FarmingPrice = 10000;
 
 new Float:g_FarmPos[][] =
 {
@@ -6257,16 +6201,6 @@ new Float:gCarPos[4][4] = {
     {272.143585, 1342.742431, 10.585937, 181.65},
     {263.938598, 1341.361816, 10.585937, 167.35}
 };
-new Float:gSellPoints[1][3] = {
-    {-53.877887, 1188.746215, 19.359375}
-};
-new Float:gOffsets[MAX_BARRELS][3] = {
-    {0.500, -0.799, 0.200},
-    {-0.500, -0.799, 0.200},
-    {-0.500, -2.000, 0.200},
-    {0.500, -2.000, 0.200},
-    {0.000, -1.400, 0.200}
-};
 
 new const Float:washmoneyPoints[][] =
 {
@@ -6295,16 +6229,6 @@ new const Float:blackhospitalspawns[][] =
 	{244.201629, 25.146083, 1501.947265}
 };
 
-new const Float:paintballSpawns[][] =
-{
-    {1291.2968, -0.1334, 1001.0228, 180.0000},
-    {1304.6259, -28.7442, 1001.0326, 90.0000},
-    {1260.6687, -0.6802, 1001.0234, 180.0000},
-    {1251.9862, -26.3548, 1001.0340, 270.0000},
-    {1278.8584, -44.1545, 1001.0236, 0.0000},
-    {1256.5944, -61.9047, 1002.4999, 0.0000},
-    {1297.3204, -61.4144, 1002.4980, 0.0000}
-};
 new const Float:paintballSpawns2[][] =
 {
     {-1131.3846, 1057.6608, 1346.4154, 180.0000},
@@ -9783,14 +9707,6 @@ DeployObject(type, Float:x, Float:y, Float:z, Float:angle)
     return -1;
 }
 
-IsAFarmerCar(carid)
-{
-    for(new v = 0; v < sizeof(FarmerVehicles); v++)
-    {
-        if(carid == FarmerVehicles[v]) return 1;
-    }
-    return 0;
-}
 
 IsFireActive()
 {
@@ -10761,19 +10677,6 @@ AddToPaycheck(playerid, amount)
         }
     }
 }
-AddJailTime(playerid, amount)
-{
-    if(pData[playerid][pLogged])
-    {
-        pData[playerid][pJailTime] = pData[playerid][pJailTime] + amount;
-
-        if(!pData[playerid][pAdminDuty])
-        {
-            mysql_format(connectionID, queryBuffer, sizeof(queryBuffer), "UPDATE users SET jailtime = jailtime + %i WHERE uid = %i", amount, pData[playerid][pID]);
-            mysql_tquery(connectionID, queryBuffer);
-        }
-    }
-}
 
 forward OnPlayerCallContact(playerid);
 public OnPlayerCallContact(playerid)
@@ -11271,48 +11174,6 @@ FriskPlayer(playerid, targetid)
     SendProximityMessage(playerid, 20.0, COLOR_GLOBAL, "**{C2A2DA} %s searches for items on %s.", GetRPName(playerid), GetRPName(targetid));
 }
 
-bpFriskPlayer(playerid, targetid)
-{
-	new str[(1024 * 2)], weapon_count;
-
-	format(str, sizeof(str), "{7DAEFF}%s backpack's Items:"WHITE"\n\n", GetRPName(targetid));
-	format(str, sizeof(str), "%sBusiness Cash: %s\n\n", str, FormatCash(pData[targetid][bpCash]));
-
-	if(pData[targetid][bpMaterials] > 0)
-	{
-	    format(str, sizeof(str), "%sThis backpack contains (%d) materials .\n", str, pData[targetid][bpMaterials]);
-	}
-    if(pData[targetid][bpPot])
-	{
-	    format(str, sizeof(str), "%sThis backpack contains (%dg) of pot.\n", str, pData[targetid][bpPot]);
-	}
-	if(pData[targetid][bpCrack])
-	{
-	    format(str, sizeof(str), "%sThis backpack contains (%dg) of crack.\n", str, pData[targetid][bpCrack]);
-	}
-	if(pData[targetid][bpMeth])
-	{
-	    format(str, sizeof(str), "%sThis backpack contains (%dg) of meth.\n", str, pData[targetid][bpMeth]);
-	}
-	if(pData[targetid][bpPainkillers])
-	{
-	    format(str, sizeof(str), "%sThis backpack contains (%d) of painkillers.\n", str, pData[targetid][bpPainkillers]);
-	}
-
-	format(str, sizeof(str), "%sWeapons:\n", str);
-	for(new i = 0; i < 13; i ++)
-	{
-	    if(pData[targetid][bpWeapons][i] > 0)
-	    {
-			weapon_count++;
-			format(str, sizeof(str), "%s{FF0000}* %s\n", str, GetWeaponNameEx(pData[targetid][bpWeapons][i]));
-		}
-	}
-	if(weapon_count < 1) format(str, sizeof(str), "%s{FF0000}* This backpack contains no weapon.", str);
-
-	ShowPlayerDialog(playerid, 0, DIALOG_STYLE_MSGBOX, "Frisk Result", str, "Close", "");
-    SendProximityMessage(playerid, 20.0, COLOR_GLOBAL, "**{C2A2DA} %s searches for backpack items on %s.", GetRPName(playerid), GetRPName(targetid));
-}
 
 DisplayInventory(playerid, targetid = INVALID_PLAYER_ID)
 {
@@ -12807,17 +12668,6 @@ ReloadMdc(atmid)
 
 // Vendor System
 
-GetNearbyVen(playerid)
-{
-    for(new i = 0; i < MAX_VENDORS; i ++)
-    {
-        if(VenInfo[i][aExists] && IsPlayerInRangeOfPoint(playerid, 3.0, VenInfo[i][aPosX], VenInfo[i][aPosY], VenInfo[i][aPosZ]))
-        {
-            return i;
-        }
-    }
-    return -1;
-}
 
 ReloadVen(atmid)
 {
@@ -12846,19 +12696,6 @@ GetNearbyPG(playerid)
     }
     return -1;
 }
-new const Float:streetfoodPositions[][] =
-{
-    {1187.39355, -1296.30835, 13.57703},
-	{968.94238, -1413.51099, 13.31624},
-	{1522.73035, -1633.98108, 13.54162},
-	{1815.07092, -1591.35071, 13.60544},
-	{1280.33911, -1260.90112, 12.54150},
-	{1123.99609, -1508.26147, 15.78990},
-	{1133.79834, -1508.09119, 15.78990},
-	{1151.65405, -1434.28271, 15.78990},
-	{1105.36682, -1429.22729, 15.78990},
-	{1968.63037, -1870.53162, 13.54089}
-};
 
 IsPlayerInStreetFoodArea(playerid)
 {
@@ -15265,31 +15102,7 @@ GetGangMemberLimit(gangid)
 
     return 0;
 }
-GetGangMemberOnline(gangid)
-{
-    new count = 0;
-    foreach(new i : Player)
-    {
-        if(pData[i][pGang] == gangid)
-        {
-            count++;
-        }
-    }
-    return count;
-}
 
-GetFactionMemberOnline(factionid)
-{
-    new count = 0;
-    foreach(new i : Player)
-    {
-        if(pData[i][pFaction] == factionid)
-        {
-            count++;
-        }
-    }
-    return count;
-}
 GetGangSkinCount(gangid)
 {
     new count;
@@ -60429,25 +60242,13 @@ IsLawEnforcement(playerid)
 }
 
 
-IsMechanic(playerid)
-{
-	return GetFactionType(playerid) == FACTION_MECHANIC;
-}
 
-IsCarDealer(playerid)
-{
-	return GetFactionType(playerid) == FACTION_CARDEALER;
-}
 
 IsAngelsBurger(playerid)
 {
 	return GetFactionType(playerid) == FACTION_BURGER;
 }
 
-IsTerrorist(playerid)
-{
-	return GetFactionType(playerid) == FACTION_TERRORIST;
-}
 
 
 
@@ -77350,19 +77151,6 @@ GivePlayerDirtyCash(playerid, amount)
         }
     }
 }
-GivePlayerPlactic(playerid, amount)
-{
-    if(pData[playerid][pLogged])
-    {
-        pData[playerid][pPlactic] = pData[playerid][pPlactic] + amount;
-
-        if(!pData[playerid][pAdminDuty])
-        {
-            mysql_format(connectionID, queryBuffer, sizeof(queryBuffer), "UPDATE users SET plactic = plactic + %i WHERE uid = %i", amount, pData[playerid][pID]);
-            mysql_tquery(connectionID, queryBuffer);
-        }
-    }
-}
 
 /*GivePlayerGold(playerid, amount)
 {
@@ -77420,75 +77208,10 @@ GivePlayerPlactic(playerid, amount)
     }
 }*/
 
-GivePlayerSteel(playerid, amount)
-{
-    if(pData[playerid][pLogged])
-    {
-        pData[playerid][pSteel] = pData[playerid][pSteel] + amount;
 
-        if(!pData[playerid][pAdminDuty])
-        {
-            mysql_format(connectionID, queryBuffer, sizeof(queryBuffer), "UPDATE users SET steel = steel + %i WHERE uid = %i", amount, pData[playerid][pID]);
-            mysql_tquery(connectionID, queryBuffer);
-        }
-    }
-}
 
-GivePlayerCopper(playerid, amount)
-{
-    if(pData[playerid][pLogged])
-    {
-        pData[playerid][pCopper] = pData[playerid][pCopper] + amount;
 
-        if(!pData[playerid][pAdminDuty])
-        {
-            mysql_format(connectionID, queryBuffer, sizeof(queryBuffer), "UPDATE users SET copper = copper + %i WHERE uid = %i", amount, pData[playerid][pID]);
-            mysql_tquery(connectionID, queryBuffer);
-        }
-    }
-}
 
-GivePlayerMetalScrap(playerid, amount)
-{
-    if(pData[playerid][pLogged])
-    {
-        pData[playerid][pMetalScrap] = pData[playerid][pMetalScrap] + amount;
-
-        if(!pData[playerid][pAdminDuty])
-        {
-            mysql_format(connectionID, queryBuffer, sizeof(queryBuffer), "UPDATE users SET metalscrap = metalscrap + %i WHERE uid = %i", amount, pData[playerid][pID]);
-            mysql_tquery(connectionID, queryBuffer);
-        }
-    }
-}
-
-GivePlayerRubber(playerid, amount)
-{
-    if(pData[playerid][pLogged])
-    {
-        pData[playerid][pRubber] = pData[playerid][pRubber] + amount;
-
-        if(!pData[playerid][pAdminDuty])
-        {
-            mysql_format(connectionID, queryBuffer, sizeof(queryBuffer), "UPDATE users SET rubber = rubber + %i WHERE uid = %i", amount, pData[playerid][pID]);
-            mysql_tquery(connectionID, queryBuffer);
-        }
-    }
-}
-
-GivePlayerGlass(playerid, amount)
-{
-    if(pData[playerid][pLogged])
-    {
-        pData[playerid][pGlass] = pData[playerid][pGlass] + amount;
-
-        if(!pData[playerid][pAdminDuty])
-        {
-            mysql_format(connectionID, queryBuffer, sizeof(queryBuffer), "UPDATE users SET glass = glass + %i WHERE uid = %i", amount, pData[playerid][pID]);
-            mysql_tquery(connectionID, queryBuffer);
-        }
-    }
-}
 GivePlayerMaterials(playerid, amount)
 {
     if(pData[playerid][pLogged])
@@ -79751,17 +79474,6 @@ CMD:startfarming(playerid, params[])
     SetPlayerCheckpoint(playerid, g_FarmStart[0][0] + 2, g_FarmStart[0][1] + 2, g_FarmStart[0][2], 3.0);
 
     return 1;
-}
-ShowFarmingCheckpoint(playerid)
-{
-    if(pData[playerid][pFarmingCheckpoint] == 0)
-    {
-        SetPlayerCheckpoint(playerid, g_FarmPos[0][0], g_FarmPos[0][1], g_FarmPos[0][2], 5.0);
-    }
-    else if(pData[playerid][pFarmingCheckpoint] == 1)
-    {
-        SetPlayerCheckpoint(playerid, g_FarmingCheckpoints[0][0], g_FarmingCheckpoints[0][1], g_FarmingCheckpoints[0][2], 5.0);
-    }
 }
 CMD:stopfarming(playerid, params[])
 {

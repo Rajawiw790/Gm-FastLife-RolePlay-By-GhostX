@@ -619,7 +619,9 @@ new const g_aInventoryItems[][e_InventoryItems] =
 	{"Repair Kit", 920, 2},
 	{"Robbery", 2680, 2},
 	{"Crack", 1575, 1},
-	{"Diamond", 1559, 1}
+	{"Diamond", 1559, 1},
+	{"Food", 11740, 4},
+	{"Drink", 2647, 4}
 };
 
 
@@ -103931,7 +103933,7 @@ public OnPlayerUseItem(playerid, itemid, name[], value)
 stock BarangMasuk(playerid)
 {
 	    Inventory_Set(playerid, "Money", 1212, pData[playerid][pCash], pData[playerid][pCash]);
-	    Inventory_Set(playerid, "Lockpick", 11746, pData[playerid][pLockpick], pData[playerid][pLockpick]);
+	    Inventory_Set(playerid, "LOCKPICK", 11746, pData[playerid][pLockpick], pData[playerid][pLockpick]);
 	    Inventory_Set(playerid, "Red Money", 1580, pData[playerid][pDirtyCash], pData[playerid][pDirtyCash]);
 	    Inventory_Set(playerid, "Phone", 18870, pData[playerid][pPhone], pData[playerid][pPhone]);
 	    Inventory_Set(playerid, "Radio", 330, pData[playerid][pWalkieTalkie], pData[playerid][pWalkieTalkie]);

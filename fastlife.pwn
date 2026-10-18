@@ -26755,9 +26755,10 @@ public OnClickDynamicPlayerTextDraw(playerid, PlayerText:textid)
 			{
 				new first = gInvSwapFirst[playerid] - 1;
 				gInvSwapFirst[playerid] = 0;
-				MenuStore_UnselectRow(playerid);
 				if(first != i) InventorySwapSlots(playerid, first, i);
-				Inventory_Show(playerid);
+				MenuStore_UnselectRow(playerid);
+				MenuStore_SelectRow(playerid, i);
+				Inventory_Update(playerid);
 			}
 		}
 	}

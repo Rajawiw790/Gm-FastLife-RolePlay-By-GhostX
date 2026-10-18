@@ -26841,7 +26841,10 @@ public OnClickDynamicPlayerTextDraw(playerid, PlayerText:textid)
             new itemid = pData[playerid][pSelectItem];
             new value = pData[playerid][pGiveAmount];
 
-            CallLocalFunction("DropPlayerItem", "dds[128]d", playerid, itemid, InventoryData[playerid][itemid][invItem], value);
+            new dropName[32];
+            strunpack(dropName, InventoryData[playerid][itemid][invItem]);
+            CallLocalFunction("DropPlayerItem", "dds[32]d", playerid, itemid, dropName, value);
+            BarangMasuk(playerid);
         }
     }
 	else if(textid == INVINFO[playerid][5])
@@ -45239,7 +45242,9 @@ if(dialogid == DIALOG_ATM_PIN)
 			new itemid = pData[playerid][pSelectItem];
 			new value = pData[playerid][pGiveAmount];
 
-			CallLocalFunction("OnPlayerGiveInvItem", "ddds[128]d", playerid, p2, itemid, InventoryData[playerid][itemid][invItem], value);
+				new giveName[32];
+				strunpack(giveName, InventoryData[playerid][itemid][invItem]);
+				CallLocalFunction("OnPlayerGiveInvItem", "ddds[32]d", playerid, p2, itemid, giveName, value);
 		}
 	}
 
@@ -103631,7 +103636,9 @@ stock Inventory_GetItemID(playerid, item[])
 	    if (!InventoryData[playerid][i][invExists])
 	        continue;
 
-		if (!strcmp(InventoryData[playerid][i][invItem], item)) return i;
+		new slotName[32];
+		strunpack(slotName, InventoryData[playerid][i][invItem]);
+		if (!strcmp(slotName, item)) return i;
 	}
 	return -1;
 }
@@ -104109,7 +104116,35 @@ public OnPlayerGiveInvItem(playerid, userid, itemid, name[], value)
         pData[playerid][pGasCan] -= value;
 		pData[userid][pGasCan] += value;
 	}
-	else if(!strcmp(name, "Phone", true))
+	else if(!strcmp(name, "Food", true))
+    {
+        format(str, sizeof(str), "Removed_%dx", value);
+        ShowItemBox(playerid, "Food", str, 11740, 2);
+
+        format(str, sizeof(str), "Received_%dx", value);
+        ShowItemBox(userid, "Food", str, 11740, 2);
+
+        ApplyAnimation(playerid, "DEALER", "shop_pay", 4, 0, 0, 0, 0, 0, 1);
+        ApplyAnimation(userid, "DEALER", "shop_pay", 4, 0, 0, 0, 0, 0, 1);
+
+        pData[playerid][pFood] -= value;
+        pData[userid][pFood] += value;
+    }
+    else if(!strcmp(name, "Drink", true))
+    {
+        format(str, sizeof(str), "Removed_%dx", value);
+        ShowItemBox(playerid, "Drink", str, 2647, 2);
+
+        format(str, sizeof(str), "Received_%dx", value);
+        ShowItemBox(userid, "Drink", str, 2647, 2);
+
+        ApplyAnimation(playerid, "DEALER", "shop_pay", 4, 0, 0, 0, 0, 0, 1);
+        ApplyAnimation(userid, "DEALER", "shop_pay", 4, 0, 0, 0, 0, 0, 1);
+
+        pData[playerid][pDrink] -= value;
+        pData[userid][pDrink] += value;
+    }
+    else if(!strcmp(name, "Phone", true))
 	{
 		format(str, sizeof(str), "Removed_%dx", pData[playerid][pGiveAmount]);
 		ShowItemBox(playerid, "Phone", str, 18870, 2);
@@ -104232,6 +104267,8 @@ public OnPlayerGiveInvItem(playerid, userid, itemid, name[], value)
 		}
 		Inventory_Addset(userid, name, model, value, (unit == -1) ? -1 : unit * value);
 	}
+	BarangMasuk(playerid);
+	BarangMasuk(userid);
 	return Inventory_Close(playerid);
 }
 

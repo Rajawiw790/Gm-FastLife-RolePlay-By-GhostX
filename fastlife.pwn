@@ -26843,7 +26843,8 @@ public OnClickDynamicPlayerTextDraw(playerid, PlayerText:textid)
 
             new dropName[32];
             strunpack(dropName, InventoryData[playerid][itemid][invItem]);
-            CallLocalFunction("DropPlayerItem", "dds[32]d", playerid, itemid, dropName, value);
+            if(CallLocalFunction("DropPlayerItem", "dds[32]d", playerid, itemid, dropName, value))
+                Inventory_TakeSlot(playerid, itemid, value);
             BarangMasuk(playerid);
         }
     }
@@ -103609,6 +103610,31 @@ stock InventorySwapSlots(playerid, a, b)
 	InventoryData[playerid][b][invAmount] = tmpAmount;
 	InventoryData[playerid][b][invTotalQuantity] = tmpTotal;
 	for(new j = 0; j < 32; j++) InventoryData[playerid][b][invItem][j] = tmpName[j];
+	return 1;
+}
+
+stock Inventory_TakeSlot(playerid, slot, value)
+{
+	if (slot < 0 || slot >= MAX_INVENTORY || !InventoryData[playerid][slot][invExists]) return 0;
+
+	new name[32], unit = -1;
+	strunpack(name, InventoryData[playerid][slot][invItem]);
+	for (new i = 0; i < sizeof(g_aInventoryItems); i++) if (!strcmp(g_aInventoryItems[i][e_InventoryItem], name, true))
+	{
+		unit = g_aInventoryItems[i][e_InventoryTotal];
+		break;
+	}
+
+	InventoryData[playerid][slot][invAmount] -= value;
+	if (unit != -1) InventoryData[playerid][slot][invTotalQuantity] -= unit * value;
+
+	if (InventoryData[playerid][slot][invAmount] <= 0)
+	{
+		InventoryData[playerid][slot][invExists] = false;
+		InventoryData[playerid][slot][invModel] = 0;
+		InventoryData[playerid][slot][invAmount] = 0;
+		InventoryData[playerid][slot][invTotalQuantity] = 0;
+	}
 	return 1;
 }
 

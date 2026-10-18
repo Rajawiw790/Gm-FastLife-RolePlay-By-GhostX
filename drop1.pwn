@@ -173,139 +173,145 @@ public OnDroppedItem(id)
     return 1;
 }
 
+stock DropFail(playerid, const msg[])
+{
+    SCM(playerid, COLOR_SYNTAX, msg);
+    return 0;
+}
+
 forward DropPlayerItem(playerid, itemid, name[], value);
 public DropPlayerItem(playerid, itemid, name[], value)
 {
     new Float:x, Float:y, Float:z;
     new str[32];
 
-    if(value < 1) return SCM(playerid, COLOR_SYNTAX, "Invalid amount.");
-    if(value > 1000) return SCM(playerid, COLOR_SYNTAX, "Max 1000.");
+    if(value < 1) return DropFail(playerid, "Invalid amount.");
+    if(value > 1000) return DropFail(playerid, "Max 1000.");
 
     GetPlayerPos(playerid, x, y, z);
 
-    if(!strcmp(name, "Cash", true))
+    if(!strcmp(name, "Cash", true) || !strcmp(name, "Money", true))
     {
-        if(pData[playerid][pCash] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough cash.");
+        if(pData[playerid][pCash] < value) return DropFail(playerid, "Not enough cash.");
         itemid = 18866;
         format(str, sizeof(str), "Removed_%dx", value);
         pData[playerid][pCash] -= value;
     }
     else if(!strcmp(name, "Phone", true))
     {
-        if(pData[playerid][pPhone] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough phones.");
+        if(pData[playerid][pPhone] < value) return DropFail(playerid, "Not enough phones.");
         itemid = 18866;
         pData[playerid][pPhone] -= value;
     }
     else if(!strcmp(name, "Radio", true))
     {
-        if(pData[playerid][pWalkieTalkie] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough radios.");
+        if(pData[playerid][pWalkieTalkie] < value) return DropFail(playerid, "Not enough radios.");
         itemid = 330;
         pData[playerid][pWalkieTalkie] -= value;
     }
     else if(!strcmp(name, "Mask", true))
     {
-        if(pData[playerid][pMask] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough masks.");
+        if(pData[playerid][pMask] < value) return DropFail(playerid, "Not enough masks.");
         itemid = 18914;
         pData[playerid][pMask] -= value;
     }
     else if(!strcmp(name, "Medkit", true))
     {
-        if(pData[playerid][pMedkit] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough medkits.");
+        if(pData[playerid][pMedkit] < value) return DropFail(playerid, "Not enough medkits.");
         itemid = 11748;
         pData[playerid][pMedkit] -= value;
     }
     else if(!strcmp(name, "Repair Kit", true))
     {
-        if(pData[playerid][pRepairKit] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough repair kits.");
+        if(pData[playerid][pRepairKit] < value) return DropFail(playerid, "Not enough repair kits.");
         itemid = 920;
         pData[playerid][pRepairKit] -= value;
     }
     else if(!strcmp(name, "Food", true))
     {
-        if(pData[playerid][pFood] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough food.");
+        if(pData[playerid][pFood] < value) return DropFail(playerid, "Not enough food.");
         itemid = 2703;
         pData[playerid][pFood] -= value;
     }
     else if(!strcmp(name, "Drink", true))
     {
-        if(pData[playerid][pDrink] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough drinks.");
+        if(pData[playerid][pDrink] < value) return DropFail(playerid, "Not enough drinks.");
         itemid = 2647;
         pData[playerid][pDrink] -= value;
     }
     else if(!strcmp(name, "Bandage", true))
     {
-        if(pData[playerid][pBandage] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough bandages.");
+        if(pData[playerid][pBandage] < value) return DropFail(playerid, "Not enough bandages.");
         itemid = 11747;
         pData[playerid][pBandage] -= value;
     }
     else if(!strcmp(name, "Lockpick", true))
     {
-        if(pData[playerid][pLockpick] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough lockpicks.");
+        if(pData[playerid][pLockpick] < value) return DropFail(playerid, "Not enough lockpicks.");
         itemid = 11747;
         pData[playerid][pLockpick] -= value;
     }
     else if(!strcmp(name, "Painkillers", true))
     {
-        if(pData[playerid][pPainkillers] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough painkillers.");
+        if(pData[playerid][pPainkillers] < value) return DropFail(playerid, "Not enough painkillers.");
         itemid = 11736;
         pData[playerid][pPainkillers] -= value;
     }
     else if(!strcmp(name, "Bitcoin", true))
     {
-        if(pData[playerid][pBitcoin] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough bitcoins.");
+        if(pData[playerid][pBitcoin] < value) return DropFail(playerid, "Not enough bitcoins.");
         itemid = 19874;
         pData[playerid][pBitcoin] -= value;
     }
     else if(!strcmp(name, "Darkcoin", true))
     {
-        if(pData[playerid][pDarkcoin] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough darkcoins.");
+        if(pData[playerid][pDarkcoin] < value) return DropFail(playerid, "Not enough darkcoins.");
         itemid = 19874;
         pData[playerid][pDarkcoin] -= value;
     }
     else if(!strcmp(name, "Eth", true))
     {
-        if(pData[playerid][pEth] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough eth.");
+        if(pData[playerid][pEth] < value) return DropFail(playerid, "Not enough eth.");
         itemid = 19874;
         pData[playerid][pEth] -= value;
     }
     else if(!strcmp(name, "Usb", true))
     {
-        if(pData[playerid][pusb] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough usbs.");
+        if(pData[playerid][pusb] < value) return DropFail(playerid, "Not enough usbs.");
         itemid = 1210;
         pData[playerid][pusb] -= value;
     }
     else if(!strcmp(name, "Pot", true))
     {
-        if(pData[playerid][pPot] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough pot.");
+        if(pData[playerid][pPot] < value) return DropFail(playerid, "Not enough pot.");
         itemid = 19473;
         pData[playerid][pPot] -= value;
     }
     else if(!strcmp(name, "Crack", true))
     {
-        if(pData[playerid][pCrack] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough crack.");
+        if(pData[playerid][pCrack] < value) return DropFail(playerid, "Not enough crack.");
         itemid = 1575;
         pData[playerid][pCrack] -= value;
     }
     else if(!strcmp(name, "Meth", true))
     {
-        if(pData[playerid][pMeth] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough meth.");
+        if(pData[playerid][pMeth] < value) return DropFail(playerid, "Not enough meth.");
         itemid = 2866;
         pData[playerid][pMeth] -= value;
     }
     else if(!strcmp(name, "Seeds", true))
     {
-        if(pData[playerid][pSeeds] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough seeds.");
+        if(pData[playerid][pSeeds] < value) return DropFail(playerid, "Not enough seeds.");
         itemid = 2663;
         pData[playerid][pSeeds] -= value;
     }
     else if(!strcmp(name, "Boombox", true))
     {
-        if(pData[playerid][pBoombox] < value) return SCM(playerid, COLOR_SYNTAX, "Not enough boomboxes.");
+        if(pData[playerid][pBoombox] < value) return DropFail(playerid, "Not enough boomboxes.");
         itemid = 2103;
         pData[playerid][pBoombox] -= value;
     }
-    else return SCM(playerid, COLOR_SYNTAX, "Invalid item name.");
+    else return DropFail(playerid, "Invalid item name.");
 
     ApplyAnimation(playerid, "CARRY", "putdwn", 4.0, 0, 1, 1, 0, 0, 1);
 

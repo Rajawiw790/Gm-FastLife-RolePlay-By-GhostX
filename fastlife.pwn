@@ -67630,7 +67630,7 @@ DCMD:profile(user, channel, params[])
     }
 
     format(g_prof_name, 64, "%s", playername);
-    g_prof_channel_id = _:channel;
+    g_prof_channel_id = channel;
 
     mysql_format(connectionID, queryBuffer, sizeof(queryBuffer),
         "SELECT username, level, age, gender, cash, bank, job, secondjob, \
@@ -67664,7 +67664,7 @@ stock bool:FL_FindOnlinePlayer(const username[], &ping)
 forward OnProfileCheck();
 public OnProfileCheck()
 {
-    new channel = g_prof_channel_id;
+    new DCC_Channel:channel = g_prof_channel_id;
 
     if(!cache_get_row_count(connectionID))
     {

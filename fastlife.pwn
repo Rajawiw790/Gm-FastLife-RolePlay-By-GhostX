@@ -26742,12 +26742,22 @@ public OnClickDynamicPlayerTextDraw(playerid, PlayerText:textid)
 	{
 		if(textid == INDEXTD[playerid][i])
 		{
-			if(InventoryData[playerid][i][invExists])
+			if(gInvSwapFirst[playerid] == 0)
 			{
-			    MenuStore_UnselectRow(playerid);
-				MenuStore_SelectRow(playerid, i);
-			    new name[48];
-            	strunpack(name, InventoryData[playerid][pData[playerid][pSelectItem]][invItem]);
+				if(InventoryData[playerid][i][invExists])
+				{
+					MenuStore_UnselectRow(playerid);
+					MenuStore_SelectRow(playerid, i);
+					gInvSwapFirst[playerid] = i + 1;
+				}
+			}
+			else
+			{
+				new first = gInvSwapFirst[playerid] - 1;
+				gInvSwapFirst[playerid] = 0;
+				MenuStore_UnselectRow(playerid);
+				if(first != i) InventorySwapSlots(playerid, first, i);
+				Inventory_Show(playerid);
 			}
 		}
 	}
@@ -103978,29 +103988,6 @@ stock BarangMasuk(playerid)
 stock Inventory_Update(playerid)
 {
 	new str[256], string[256];
-	for(new i = 0; i < MAX_INVENTORY; i++)
-	{
-		if(textid == INDEXTD[playerid][i])
-		{
-			if(gInvSwapFirst[playerid] == 0)
-			{
-				if(InventoryData[playerid][i][invExists])
-				{
-					MenuStore_UnselectRow(playerid);
-					MenuStore_SelectRow(playerid, i);
-					gInvSwapFirst[playerid] = i + 1;
-				}
-			}
-			else
-			{
-				new first = gInvSwapFirst[playerid] - 1;
-				gInvSwapFirst[playerid] = 0;
-				MenuStore_UnselectRow(playerid);
-				if(first != i) InventorySwapSlots(playerid, first, i);
-				Inventory_Show(playerid);
-			}
-		}
-	}
 	for(new i = 0; i < MAX_INVENTORY; i++)
 	{
 		if(InventoryData[playerid][i][invExists])

@@ -24695,6 +24695,17 @@ case THREAD_LOOKUP_BANS:
             new date[64];
 
             cache_get_field_content(0, "login_date", date);
+
+            // Security: warn when the account is logged into from an IP different from the last login
+            new storedIP[32];
+            cache_get_field_content(0, "ip", storedIP, connectionID, sizeof(storedIP));
+            if(strcmp(storedIP, GetPlayerIP(extraid)))
+            {
+                new alertStr[160];
+                format(alertStr, sizeof(alertStr), "```[SECURITY] %s logged in from new IP %s (last IP: %s)```", GetPlayerNameEx(extraid), GetPlayerIP(extraid), storedIP);
+                DCC_SendChannelMessage(login, alertStr);
+                SCM(extraid, COLOR_YELLOW, "[Security] Dkhalti mn IP jdid. Ila mashi nta, bdel password dyalek daba.");
+            }
             cache_get_field_content(0, "age", pData[extraid][pAge]);
             cache_get_field_content(0, "lastageupdate", pData[extraid][pLastAgeUpdate]);
             cache_get_field_content(0, "accent", pData[extraid][pAccent], connectionID, 16);

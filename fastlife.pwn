@@ -595,6 +595,8 @@ enum inventoryData
 };
 new InventoryData[MAX_PLAYERS][MAX_INVENTORY][inventoryData];
 new gInvSwapFirst[MAX_PLAYERS];
+// Name of the account each pending login query was started for (guards against playerid reuse)
+new gLoginPendingName[MAX_PLAYERS][MAX_PLAYER_NAME];
 enum e_InventoryItems
 {
 	e_InventoryItem[32], //Nama item
@@ -24663,6 +24665,13 @@ case THREAD_LOOKUP_BANS:
         }
         case THREAD_PROCESS_LOGIN:
         {	// OnPlayerLogin
+        // Ignore results for a player who left, whose id was reused, or who is already logged in
+        if(!IsPlayerConnected(extraid)) return 1;
+        new curLoginName[MAX_PLAYER_NAME];
+        GetPlayerName(extraid, curLoginName, sizeof(curLoginName));
+        if(strcmp(curLoginName, gLoginPendingName[extraid])) return 1;
+        if(pData[extraid][pLogged]) return 1;
+
         if(!rows)
         {
             pData[extraid][pLoginTries]++;
@@ -51915,6 +51924,7 @@ if(dialogid == DIALOG_ATM_PIN)
 
             WP_Hash(password, sizeof(password), inputtext);
 
+            GetPlayerName(playerid, gLoginPendingName[playerid], MAX_PLAYER_NAME);
             mysql_format(connectionID, queryBuffer, sizeof(queryBuffer), "SELECT *, DATE_FORMAT(lastlogin, '%s') AS login_date FROM users WHERE username = '%s' AND password = '%s'", specifiers, GetPlayerNameEx(playerid), password);
             mysql_tquery(connectionID, queryBuffer, "OnQueryFinished", "ii", THREAD_PROCESS_LOGIN, playerid);
         }

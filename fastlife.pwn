@@ -86477,6 +86477,9 @@ public OnCheatDetected(playerid, ip_address[], type, code, code2)
         return 1; // Ignore detections for these players
     }
 
+    // Codes outside the table (e.g. 52 with AC_MAX_CODES 52) would index out of bounds.
+    if (code < 0 || code >= AC_MAX_CODES) return 1;
+
     if (type == AC_GLOBAL_TRIGGER_TYPE_PLAYER)
     {
         switch(code)
